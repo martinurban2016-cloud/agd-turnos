@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#1e40af" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="AGD Turnos" />
+  <title>AGD Turnos</title>
+
+  <!-- PWA Manifest inline -->
+  <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22AGD%20Turnos%22%2C%22short_name%22%3A%22AGD%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%231e40af%22%2C%22theme_color%22%3A%22%231e40af%22%7D" />
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap');
+
+    :root {
+      --blue-deep: #0f2057;
+      --blue-mid: #1e40af;
+      --blue-bright: #3b82f6;
+      --blue-light: #dbeafe;
+      --accent: #f59e0b;
+      --accent-light: #fef3c7;
+      --white: #ffffff;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-300: #cbd5e1;
+      --gray-500: #64748b;
+      --gray-700: #334155;
+      --gray-900: #0f172a;
+      --green: #059669;
+      --green-light: #d1fae5;
+      --red: #dc2626;
+      --purple: #7c3aed;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--gray-100);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ====== COVER PAGE ====== */
+    #cover {
+      min-height: 100vh;
+      background: linear-gradient(145deg, #0a1628 0%, #1e3a8a 45%, #1e40af 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #cover::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(ellipse 80% 50% at 20% 80%, rgba(59,130,246,0.15) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 20%, rgba(245,158,11,0.08) 0%, transparent 60%);
+    }
+
+    .cover-grid {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .cover-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 2rem;
+      max-width: 380px;
+      width: 100%;
+    }
+
+    .cover-badge {
+      display: inline-block;
+      background: rgba(245,158,11,0.15);
+      border: 1px solid rgba(245,158,11,0.4);
+      color: var(--accent);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.8rem;
+      border-radius: 100px;
+      margin-bottom: 1.5rem;
+    }
+
+    .cover-logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 6rem;
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+    }
+
+    .cover-logo span {
+      color: var(--accent);
+    }
+
+    .cover-subtitle {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .cover-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 3rem;
+    }
+
+    .cover-divider {
+      width: 40px;
+      height: 3px;
+      background: var(--accent);
+      margin: 1rem auto 2.5rem;
+      border-radius: 2px;
+    }
+
+    .btn-primary {
+      display: block;
+      width: 100%;
+      padding: 1rem;
+      background: var(--accent);
+      color: var(--blue-deep);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 0.75rem;
+      box-shadow: 0 4px 20px rgba(245,158,11,0.3);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.97);
+      box-shadow: 0 2px 10px rgba(245,158,11,0.2);
+    }
+
+    .btn-secondary {
+      display: block;
+      width: 100%;
+      padding: 1rem;
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.7);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:active {
+      transform: scale(0.97);
+      background: rgba(255,255,255,0.12);
+    }
+
+    .cover-footer {
+      position: absolute;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.35);
+      font-style: italic;
+    }
+
+    /* ====== MAIN APP ====== */
+    #app {
+      display: none;
+      min-height: 100vh;
+      background: var(--gray-100);
+    }
+
+    .app-header {
+      background: linear-gradient(135deg, var(--blue-deep) 0%, var(--blue-mid) 100%);
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 20px rgba(15,32,87,0.3);
+    }
+
+    .header-logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -0.02em;
+    }
+
+    .header-logo span {
+      color: var(--accent);
+    }
+
+    .btn-back {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.85);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.4rem 0.9rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-back:active {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .app-body {
+      padding: 1.5rem;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      letter-spacing: 0.02em;
+      margin-bottom: 1rem;
+    }
+
+    /* ====== CARD ====== */
+    .card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      margin-bottom: 1rem;
+    }
+
+    /* ====== SELECTS ====== */
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .field label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .field select {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 100%;
+      padding: 0.8rem 2.5rem 0.8rem 1rem;
+      background: var(--gray-50);
+      border: 2px solid var(--gray-100);
+      border-radius: 10px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--gray-900);
+      cursor: pointer;
+      transition: border-color 0.2s;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2364748b' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+    }
+
+    .field select:focus {
+      outline: none;
+      border-color: var(--blue-bright);
+      background-color: var(--white);
+    }
+
+    /* ====== GRID 2 COLS ====== */
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    /* ====== RESULT BOX ====== */
+    .result-card {
+      background: linear-gradient(135deg, var(--blue-mid) 0%, var(--blue-deep) 100%);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 20px rgba(30,64,175,0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .result-card::before {
+      content: '';
+      position: absolute;
+      top: -20px;
+      right: -20px;
+      width: 100px;
+      height: 100px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 50%;
+    }
+
+    .result-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 0.5rem;
+    }
+
+    .result-turno {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 0.25rem;
+    }
+
+    .result-date {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 0.75rem;
+    }
+
+    .result-horario {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.1;
+      letter-spacing: 0.02em;
+    }
+
+    .result-horario.franco {
+      color: var(--accent);
+    }
+
+    /* ====== TURNO BUTTONS ====== */
+    .turno-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+    }
+
+    .turno-btn {
+      padding: 0.9rem 0.5rem;
+      border: 2px solid var(--gray-200, #e2e8f0);
+      border-radius: 12px;
+      background: var(--gray-50);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--gray-500);
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: center;
+    }
+
+    .turno-btn.active {
+      background: var(--blue-mid);
+      border-color: var(--blue-mid);
+      color: var(--white);
+      box-shadow: 0 3px 12px rgba(30,64,175,0.3);
+    }
+
+    .turno-btn:active {
+      transform: scale(0.95);
+    }
+
+    .field-label-standalone {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    /* ====== HIDDEN ====== */
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+<!-- COVER PAGE -->
+<div id="cover">
+  <div class="cover-grid"></div>
+  <div class="cover-content">
+    <div class="cover-badge">Sistema de Turnos</div>
+    <div class="cover-logo">A<span>G</span>D</div>
+    <div class="cover-subtitle">Aceitera General Deheza</div>
+    <div class="cover-divider"></div>
+    <div class="cover-title">Consulta de Horarios</div>
+    <button class="btn-primary" onclick="showApp()">▶ Iniciar Aplicación</button>
+    <button class="btn-secondary" onclick="window.close()">Salir</button>
+  </div>
+  <div class="cover-footer">Creado por: Martin Urban</div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <div class="app-header">
+    <div class="header-logo">A<span>G</span>D</div>
+    <button class="btn-back" onclick="showCover()">← Inicio</button>
+  </div>
+
+  <div class="app-body">
+
+    <!-- RESULT -->
+    <div class="result-card">
+      <div class="result-label">Resultado</div>
+      <div class="result-turno" id="res-turno">Turno 1</div>
+      <div class="result-date" id="res-date">1 de ENERO de 2025</div>
+      <div class="result-horario" id="res-horario">—</div>
+    </div>
+
+    <!-- SELECTORS -->
+    <div class="card">
+      <div class="field-group">
+
+        <!-- Turno buttons -->
+        <div>
+          <span class="field-label-standalone">Turno</span>
+          <div class="turno-grid">
+            <button class="turno-btn active" onclick="selectTurno(1, this)">Turno 1</button>
+            <button class="turno-btn" onclick="selectTurno(2, this)">Turno 2</button>
+            <button class="turno-btn" onclick="selectTurno(3, this)">Turno 3</button>
+            <button class="turno-btn" onclick="selectTurno(4, this)">Turno 4</button>
+          </div>
+        </div>
+
+        <!-- Mes y Año -->
+        <div class="field-row">
+          <div class="field">
+            <label>Mes</label>
+            <select id="sel-month" onchange="calculate()">
+              <option value="0">ENERO</option>
+              <option value="1">FEBRERO</option>
+              <option value="2">MARZO</option>
+              <option value="3">ABRIL</option>
+              <option value="4">MAYO</option>
+              <option value="5">JUNIO</option>
+              <option value="6">JULIO</option>
+              <option value="7">AGOSTO</option>
+              <option value="8">SEPTIEMBRE</option>
+              <option value="9">OCTUBRE</option>
+              <option value="10">NOVIEMBRE</option>
+              <option value="11">DICIEMBRE</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Año</label>
+            <select id="sel-year" onchange="updateDays(); calculate()"></select>
+          </div>
+        </div>
+
+        <!-- Día -->
+        <div class="field">
+          <label>Día</label>
+          <select id="sel-day" onchange="calculate()"></select>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const MONTHS = ["ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE"];
+
+  const baseCycles = {
+    1: ["M","T","N","N","N","T","F","F","M","M","M","M","M","T","T","F","F","T","T","N","N","N","N","T","F","F","F","M"],
+    2: ["F","M","M","M","M","M","T","T","F","F","T","T","N","N","N","N","T","F","F","F","M","M","T","N","N","N","T","F"],
+    3: ["N","N","T","F","F","F","M","M","T","N","N","N","T","F","F","M","M","M","M","M","T","T","F","F","T","T","N","N"],
+    4: ["T","F","F","T","T","N","N","N","N","T","F","F","F","M","M","T","N","N","N","T","F","F","M","M","M","M","M","T"]
+  };
+
+  const horarioLabel = {
+    "M": "05:00 — 13:00",
+    "T": "13:00 — 21:00",
+    "N": "21:00 — 05:00",
+    "F": "FRANCO"
+  };
+
+  let selectedTurno = 1;
+
+  function isLeap(y) { return (y%4===0 && y%100!==0) || y%400===0; }
+
+  function monthLength(monthIdx, year) {
+    if (monthIdx === 1) return isLeap(year) ? 29 : 28;
+    if ([3,5,8,10].includes(monthIdx)) return 30;
+    return 31;
+  }
+
+  function selectTurno(n, btn) {
+    selectedTurno = n;
+    document.querySelectorAll('.turno-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    calculate();
+  }
+
+  function updateDays() {
+    const mIdx = parseInt(document.getElementById('sel-month').value);
+    const year = parseInt(document.getElementById('sel-year').value);
+    const daySel = document.getElementById('sel-day');
+    const currentDay = parseInt(daySel.value) || 1;
+    const len = monthLength(mIdx, year);
+    daySel.innerHTML = '';
+    for (let d = 1; d <= len; d++) {
+      const opt = document.createElement('option');
+      opt.value = d;
+      opt.textContent = `Día ${d}`;
+      if (d === currentDay && d <= len) opt.selected = true;
+      daySel.appendChild(opt);
+    }
+  }
+
+  function calculate() {
+    const mIdx = parseInt(document.getElementById('sel-month').value);
+    const year = parseInt(document.getElementById('sel-year').value);
+    const day = parseInt(document.getElementById('sel-day').value);
+
+    const baseDate = Date.UTC(2025, 0, 1);
+    const targetDate = Date.UTC(year, mIdx, day);
+    const diff = Math.floor((targetDate - baseDate) / 86400000);
+    const cycle = baseCycles[selectedTurno];
+    const idx = ((diff % 28) + 28) % 28;
+    const code = cycle[idx];
+    const label = horarioLabel[code] || "—";
+
+    document.getElementById('res-turno').textContent = `Turno ${selectedTurno}`;
+    document.getElementById('res-date').textContent = `${day} de ${MONTHS[mIdx]} de ${year}`;
+    const horEl = document.getElementById('res-horario');
+    horEl.textContent = label;
+    horEl.className = 'result-horario' + (code === 'F' ? ' franco' : '');
+  }
+
+  function showApp() {
+    document.getElementById('cover').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    calculate();
+  }
+
+  function showCover() {
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('cover').style.display = 'flex';
+  }
+
+  // Init year selector
+  (function init() {
+    const yearSel = document.getElementById('sel-year');
+    for (let y = 2025; y <= 2050; y++) {
+      const opt = document.createElement('option');
+      opt.value = y;
+      opt.textContent = y;
+      yearSel.appendChild(opt);
+    }
+    updateDays();
+
+    // Set today's date by default
+    const today = new Date();
+    const m = today.getMonth();
+    const y = today.getFullYear();
+    const d = today.getDate();
+    const mSel = document.getElementById('sel-month');
+    const ySel = document.getElementById('sel-year');
+    if (m >= 0) mSel.value = m;
+    if (y >= 2025 && y <= 2050) ySel.value = y;
+    updateDays();
+    document.getElementById('sel-day').value = d;
+    calculate();
+  })();
+</script>
+</body>
+</html>
